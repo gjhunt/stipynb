@@ -4,7 +4,7 @@
 \alias{style_nb}
 \title{Style the notebook using the \code{styler} package.}
 \usage{
-style_nb(notebook_file, overwrite = FALSE, verbose = TRUE)
+style_nb(notebook_file, overwrite = FALSE, verbose = TRUE, save = TRUE)
 }
 \arguments{
 \item{notebook_file}{the notebook file name}
@@ -12,6 +12,8 @@ style_nb(notebook_file, overwrite = FALSE, verbose = TRUE)
 \item{overwrite}{overwrite existing ipynb file (default: FALSE)}
 
 \item{verbose}{print information about styling (default: TRUE)}
+
+\item{save}{save the styled file (default: TRUE)}
 }
 \description{
 Style the notebook using the \code{styler} package.

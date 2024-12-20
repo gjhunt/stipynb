@@ -1,12 +1,10 @@
-# library(jsonlite) library(styler) library(digest) library(glue)
-# library(optparse)
-
 #' Style the notebook using the `styler` package.
 #' @param notebook_file the notebook file name
 #' @param overwrite overwrite existing ipynb file (default: FALSE)
 #' @param verbose print information about styling (default: TRUE)
+#' @param save save the styled file (default: TRUE)
 #' @export
-style_nb <- function(notebook_file, overwrite = FALSE, verbose = TRUE) {
+style_nb <- function(notebook_file, overwrite = FALSE, verbose = TRUE, save = TRUE) {
 
     nb <- tools::file_path_sans_ext(notebook_file)
 
@@ -17,6 +15,9 @@ style_nb <- function(notebook_file, overwrite = FALSE, verbose = TRUE) {
     } else {
         new_notebook_path <- glue::glue("{nb}_styled.ipynb")
     }
+
+    if (!file.exists(notebook_path))
+        stop(glue::glue("{notebook_path} does not exist."))
 
     original_notebook <- jsonlite::fromJSON(notebook_path, simplifyVector = FALSE)
 
@@ -31,7 +32,7 @@ style_nb <- function(notebook_file, overwrite = FALSE, verbose = TRUE) {
         cat(paste0("Styled file hash: ", styled_hash, "\n"))
     }
 
-    if (original_hash != styled_hash) {
+    if ((original_hash != styled_hash) & save) {
         # Write the styled notebook back to the original file
         jsonlite::write_json(styled_nb, new_notebook_path, auto_unbox = TRUE, pretty = TRUE,
             null = "null")
@@ -41,4 +42,6 @@ style_nb <- function(notebook_file, overwrite = FALSE, verbose = TRUE) {
         if (verbose)
             cat("No changes were made to the notebook.\n")
     }
+
+    return(list(original_hash = original_hash, styled_hash = styled_hash, json = styled_nb))
 }
